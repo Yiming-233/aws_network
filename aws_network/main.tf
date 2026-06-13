@@ -30,7 +30,7 @@ resource "aws_vpc" "main" {
   instance_tenancy = "default"
   tags = merge(
     local.default_tags, {
-      Name = "${var.prefix}-public-subnet"
+      Name = "${var.prefix}-${var.env}-vpc"
     }
   )
 }
@@ -44,7 +44,7 @@ resource "aws_subnet" "public_subnet" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
   tags = merge(
     local.default_tags, {
-      Name = "${var.prefix}-public-subnet"
+      Name = "${var.prefix}-${var.env}-public-subnet-${count.index}"
     }
   )
 }
@@ -55,7 +55,7 @@ resource "aws_internet_gateway" "igw" {
 
   tags = merge(local.default_tags,
     {
-      "Name" = "${var.prefix}-igw"
+      "Name" = "${var.prefix}-${var.env}-igw"
     }
   )
 }
@@ -68,7 +68,7 @@ resource "aws_route_table" "public_subnets" {
     gateway_id = aws_internet_gateway.igw.id
   }
   tags = {
-    Name = "${var.prefix}-route-public-subnets"
+    Name = "${var.prefix}-${var.env}-route-public-subnets"
   }
 }
 
